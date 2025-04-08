@@ -15,7 +15,6 @@ def test_file_valid():
     assert data.count(".") == 4175
     assert data.count("\n") == 453
 
-
 def test_individual_lines():
     with open(OUTPUT_FILE_NAME) as f:
         data = f.readlines()

@@ -17,23 +17,78 @@ MORSE_CODE = {'A': '.-',     'B': '-...',   'C': '-.-.',
               "'": '.----.', '-': '-....-',
               }
 
+class MorseCode:
+    '''
+    A class to convert English text to Morse code and vice versa.
+    '''
 
-def english_to_morse(
-    input_file: str = "lorem.txt",
-    output_file: str = "lorem_morse.txt"
-):
-    """Convert an input text file to an output Morse code file.
+    def __init__(self, morse_code_dict: dict, in_path: str,out_path: str):
+        '''
+        params:
+        Path: path to the file containing the text to be converted.
+        morse_code_dict: dictionary containing the mapping between English letters and
+        '''
+        self.vocab = morse_code_dict
+        self.path = in_path
+        self.out_path = out_path
+    
+    def read_file(self):
+        '''
+        Read the file and return the content as a string.
+        '''
+        with open(self.path, 'r') as f: ##r stands for read mode
+            return f.read()
+        
+    def write_file(self, string: str):
+        '''
+        Takes a string and writes it to afile as a morse code.
+        '''
+        
+        string = string.upper()  # convert to uppercase 
+        lines = string.split('\n')  
+        morse_code = []
+        for line in lines:
+            for word in line.split():
+                for char in word:
+                    if char in self.vocab.keys():
+                        morse_code.append(self.vocab[char])
+                morse_code.append('\n')  # add space between words
+            if line == "":
+                morse_code.append('\n')  
+        morse_code.pop()  # remove the last newline character
 
-    Notes
-    -----
-    This function assumes the existence of a MORSE_CODE dictionary, containing a
-    mapping between English letters and their corresponding Morse code.
+                
+        with open(self.out_path, 'w') as w:
+            w.write(''.join(morse_code))  # join the morse code to string and write to file
 
-    Parameters
-    ----------
-    input_file : str
-        Path to file containing the text file to convert.
-    output_file : str
-        Name of output file containing the translated Morse code. Please don't change
-        it since it's also hard-coded in the tests file.
-    """
+            
+
+    def english_to_morse(self,
+        input_file: str = "lorem.txt",
+        output_file: str = "lorem_morse.txt"
+    ):
+        """Convert an input text file to an output Morse code file.
+
+        Notes
+        -----
+        This function assumes the existence of a MORSE_CODE dictionary, containing a
+        mapping between English letters and their corresponding Morse code.
+
+        Parameters
+        ----------
+        input_file : str
+            Path to file containing the text file to convert.
+        output_file : str
+            Name of output file containing the translated Morse code. Please don't change
+            it since it's also hard-coded in the tests file.
+        """
+        ## Read the input string from the file
+        script = self.read_file()
+
+        ## convert the string to morse code
+        self.write_file(script)
+
+if __name__ == "__main__":
+    morse_code = MorseCode(MORSE_CODE, "lorem.txt","lorem_morse.txt")
+    morse_code.english_to_morse()
+    print("Morse code conversion complete.")
