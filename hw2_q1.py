@@ -52,7 +52,10 @@ class MorseCode:
         '''
         Takes a string and writes it to afile as a morse code.
         '''
-        
+        ## This will apply the function to word by word and join them with a newline character, string.splitlines() ##
+        ## will split the string into lines and map will apply the function to each word in the line.
+    
+
         morse_code = '\n'.join(
             map(
                 lambda line: '\n'.join(map(self.translate_word, line.split())),
