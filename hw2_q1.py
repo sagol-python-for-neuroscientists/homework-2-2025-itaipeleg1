@@ -36,31 +36,40 @@ class MorseCode:
         '''
         Read the file and return the content as a string.
         '''
-        with open(self.path, 'r') as f: ##r stands for read mode
-            return f.read()
-        
+        try:
+            with open(self.path, 'r') as f: ##r stands for read mode
+                return f.read()
+        except FileNotFoundError:
+            print(f"File {self.path} not found.")
+            return None
+    def translate_word(self, string: str):
+        '''
+        Takes a woed and returns the morse code translation of the woed
+        '''
+        return ''.join(self.vocab.get(c,'') for c in string.upper())
+    
     def write_file(self, string: str):
         '''
         Takes a string and writes it to afile as a morse code.
         '''
         
-        string = string.upper()  # convert to uppercase 
-        lines = string.split('\n')  
-        morse_code = []
-        for line in lines:
-            for word in line.split():
-                for char in word:
-                    if char in self.vocab.keys():
-                        morse_code.append(self.vocab[char])
-                morse_code.append('\n')  # add space between words
-            if line == "":
-                morse_code.append('\n')  
-        morse_code.pop()  # remove the last newline character
+        morse_code = '\n'.join(
+            map(
+                lambda line: '\n'.join(map(self.translate_word, line.split())),
+                string.splitlines()
+            )
+        ).rstrip()  # remove the last newline character
 
-                
-        with open(self.out_path, 'w') as w:
-            w.write(''.join(morse_code))  # join the morse code to string and write to file
 
+
+
+        try:        
+            with open(self.out_path, 'w') as w:
+                w.write(morse_code)  # join the morse code to string and write to file
+
+        except Exception as e:
+            print(f"An error occurred while writing to the file: {e}")
+            return None
             
 
     def english_to_morse(self,
